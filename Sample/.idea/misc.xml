@@ -5,12 +5,12 @@
       <map>
         <entry key="app/src/main/res/layout/activity_detail.xml" value="0.28072916666666664" />
         <entry key="app/src/main/res/layout/activity_login_page.xml" value="0.2836602252462636" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.2327355426290761" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.22446070132048235" />
         <entry key="app/src/main/res/layout/activity_main2.xml" value="0.28940217391304346" />
         <entry key="app/src/main/res/layout/activity_register_account.xml" value="0.18614130434782608" />
         <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.31757500689962637" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25030670166015623" />
-        <entry key="app/src/main/res/layout/list_items.xml" value="0.29523461383322014" />
+        <entry key="app/src/main/res/layout/list_items.xml" value="0.2992340087890626" />
       </map>
     </option>
   </component>

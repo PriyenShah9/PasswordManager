@@ -4,18 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="#000000"
     tools:context=".MainActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:backgroundTint="#000000"
         tools:context=".Home">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="656dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:background="#00000000"
             tools:listitem="@layout/list_items" />
 
         <Button
@@ -24,7 +27,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:backgroundTint="#1976D2"
+            android:shadowRadius=".2"
+            android:shadowDx="0"
+            android:shadowDy="-1"
+            android:shadowColor="@color/black"
+            android:fadingEdge="vertical"
             android:gravity="right|top"
+
             android:text="Add New Password" />
     </FrameLayout>
 

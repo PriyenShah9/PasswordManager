@@ -119,7 +119,7 @@ public class LoginPage extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        startService(new Intent(this, PwnedService.class));
+        //startService(new Intent(this, PwnedService.class));
     }
 }
 
