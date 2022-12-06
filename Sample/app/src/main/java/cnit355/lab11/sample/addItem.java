@@ -63,10 +63,19 @@ public class addItem extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    int inter = 0;
                     for(String s : lines)
                     {
                         try {
-                            fWriter.write("\n"+s);
+                            if(inter != 0)
+                            {
+                                fWriter.write("\n"+s);
+                            }
+                            else
+                            {
+                                fWriter.write(s);
+                            }
+                            inter+=1;
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
