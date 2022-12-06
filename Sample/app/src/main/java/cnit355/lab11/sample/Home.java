@@ -91,7 +91,7 @@ public class Home extends Fragment implements RecyclerViewInterface {
         recyclerview = view.findViewById(R.id.recyclerView);
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerview.setHasFixedSize(true);
-        MyAdapter adapter = new MyAdapter(getContext(), websiteArrayList, this);
+        MyAdapter adapter = new MyAdapter(websiteArrayList, this);
         recyclerview.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -153,4 +153,8 @@ public class Home extends Fragment implements RecyclerViewInterface {
         });
     }
 
+    @Override
+    public void onItemClick(int position) {
+
+    }
 }

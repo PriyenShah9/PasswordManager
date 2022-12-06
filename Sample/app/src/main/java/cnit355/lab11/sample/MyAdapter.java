@@ -14,11 +14,11 @@ import java.util.ArrayList;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>  {
     private final RecyclerViewInterface recyclerViewInterface;
 
-    Context context;
+
     ArrayList<Websites> web;
 
-    public MyAdapter(Context context, ArrayList<Websites> web, RecyclerViewInterface recyclerViewInterface) {
-        this.context = context;
+    public MyAdapter(ArrayList<Websites> web, RecyclerViewInterface recyclerViewInterface) {
+
         this.web = web;
         this.recyclerViewInterface = recyclerViewInterface;
 
@@ -27,15 +27,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>  {
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.list_items, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_items, parent, false);
         return new MyViewHolder(v, recyclerViewInterface);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        String name = String.valueOf(web.get(position).Name);
+        holder.website.setText(name);
 
-        Websites webPos = web.get(position);
-        holder.website.setText(webPos.Name);
+
 
 
     }
@@ -72,3 +73,4 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>  {
         }
     }
 }
+

@@ -28,10 +28,13 @@
         <service
             android:name=".PwnedService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".RegisterAccount"
+            android:exported="false" />
+        <activity
+            android:name=".DetailActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

@@ -7,13 +7,25 @@
     tools:context=".MainActivity">
 
     <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Home">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="656dp"
+            android:layout_gravity="bottom"
+            tools:listitem="@layout/list_items" />
+
+        <Button
+            android:id="@+id/AddNew"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#1976D2"
+            android:gravity="right|top"
+            android:text="Add New Password" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
