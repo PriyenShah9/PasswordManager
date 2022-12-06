@@ -1,5 +1,6 @@
 package cnit355.lab11.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -92,10 +94,10 @@ public class Home extends Fragment {
         adapter.notifyDataSetChanged();
 
     }
-
+    public String tempusr = "";
     private void dataInitialize() {
         File usr = new File(Environment.getExternalStorageDirectory(), "/Documents");
-        String tempusr = MainActivity.user+".txt";
+        tempusr = MainActivity.user;
         File curUSR = new File(usr, tempusr);
         try(BufferedReader br = new BufferedReader(new FileReader(curUSR))) {
             String line;
@@ -131,14 +133,22 @@ public class Home extends Fragment {
                 "Website 5",
                 "Website 6",
                 "Website 7",
-
         };
-
          */
 
         for (int i  = 0; i <sites.size(); i++){
             Websites web = new Websites(sites.get(i), email.get(i), password.get(i));
             websiteArrayList.add(web);
         }
+        Button addNew = getView().findViewById(R.id.AddNew);
+        addNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mIntent = new Intent(getActivity().getApplicationContext(), addItem.class);
+                mIntent.putExtra("user", tempusr);
+                startActivity(mIntent);
+            }
+        });
     }
+
 }

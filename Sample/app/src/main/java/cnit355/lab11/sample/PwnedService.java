@@ -40,11 +40,15 @@ import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -55,6 +59,7 @@ public class PwnedService extends Service {
     TimerTask timerTask ;
     String TAG = "Timers" ;
     int Your_X_SECS = 5 ;
+    public static boolean running = false;
     @Override
     public IBinder onBind (Intent arg0) {
         return null;
@@ -95,30 +100,61 @@ public class PwnedService extends Service {
             public void run () {
                 handler.post( new Runnable() {
                     public void run () {
-                        File root = new File(Environment.getExternalStorageDirectory(), "Notes");
-                        if(!root.exists()){
-                            root.mkdirs();
-                        }
-                        File passFiles = new File(root, "savedData.txt");
-                        try
+                        if(!running)
                         {
-                            FileReader fr = new FileReader(passFiles);
-                            BufferedReader br = new BufferedReader(fr);
-                            StringBuffer sb = new StringBuffer();
-                            String line;
-                            while((line=br.readLine())!=null)
+                            File base = new File(Environment.getExternalStorageDirectory(), "/Documents");
+                            File file = new File(base, "latestLog.txt");
+                            List<String> last = new ArrayList<String>();
+                            try
                             {
-                                PassList.add(line);
+
+                                Scanner scanner = new Scanner(file);
+                                while (scanner.hasNextLine())
+                                {
+                                    last.add(scanner.nextLine());
+                                }
                             }
-                            fr.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                            catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            String user = last.get(0);
+                            File usr = new File(Environment.getExternalStorageDirectory(), "/Documents");
+                            File curUSR = new File(usr, user);
+                            try(BufferedReader br = new BufferedReader(new FileReader(curUSR))){
+                                String line;
+                                int count = 0;
+                                while((line = br.readLine()) != null)
+                                {
+                                    if(count == 0)
+                                    {
+
+                                    }
+                                    else
+                                    {
+                                        final String secretKey = "355Project";
+                                        String[] split = line.split(",");
+                                        String tempPass = split[2];
+                                        AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
+                                        String decryptedPass = aesEncryptionDecryption.decrypt(tempPass, secretKey);
+                                        PassList.add(decryptedPass);
+                                        break;
+                                    }
+                                    count +=1;
+                                }
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            CheckVulnerable check = new CheckVulnerable();
+                            for(String z: PassList)
+                            {
+                                if(!running) {
+                                    check.execute(z);
+                                }
+                                running = true;
+                            }
                         }
-                        CheckVulnerable check = new CheckVulnerable();
-                        for(String z: PassList)
-                        {
-                            check.execute(z);
-                        }
+
                         //createNotification() ;
                     }
                 }) ;
@@ -149,11 +185,29 @@ public class PwnedService extends Service {
         void ShuaXin();
     }
     public class CheckVulnerable extends AsyncTask<String, Integer, String> {
-
+        public int leaks;
         private InputStream getServetReponse(String passHash, HttpClient mHttpCLient, HttpGet post) {
             try {
                 ClassicHttpResponse mResponse = (ClassicHttpResponse) mHttpCLient.execute(post);
                 HttpEntity mEntity = mResponse.getEntity();
+                String response = EntityUtils.toString(mEntity, "UTF-8");
+                String[] parsing = response.split(":");
+                int count = 0;
+                for (String s : parsing)
+                {
+                    if(count == 2)
+                    {
+                        leaks = Integer.parseInt(s);
+                    }
+                    if(count == 1)
+                    {
+                        count+=1;
+                    }
+                    if(s.equals(passHash))
+                    {
+                        count+=1;
+                    }
+                }
                 Log.i("WORK", EntityUtils.toString(mEntity, "UTF-8"));
                 return (mEntity.getContent());
             } catch (SocketTimeoutException e) {
@@ -188,6 +242,7 @@ public class PwnedService extends Service {
             HttpClient httpClient = HttpClients.createDefault();
             HttpGet httpGet = new HttpGet(url);
             getServetReponse(sha1, httpClient, httpGet);
+            running = false;
             BaseHttpConn baseHttpConn = new BaseHttpConn(new TimeOut() {
                 @Override
                 public void ShuaXin() {
@@ -218,7 +273,6 @@ public class PwnedService extends Service {
                     e.printStackTrace();
                     httpURLConnection.disconnect();
                     shuaxin.ShuaXin();
-
                 }
                 return httpURLConnection;
             }

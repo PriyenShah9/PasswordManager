@@ -1,16 +1,10 @@
 package cnit355.lab11.sample;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,12 +13,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -42,10 +31,10 @@ public class RegisterAccount extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_account);
-        FullName = findViewById(R.id.fullName);
-        Username = findViewById(R.id.Username);
+        FullName = findViewById(R.id.website);
+        Username = findViewById(R.id.email);
         Password = findViewById(R.id.pass);
-        reg = findViewById(R.id.reg);
+        reg = findViewById(R.id.addAnother);
         reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +61,7 @@ public class RegisterAccount extends AppCompatActivity {
                     try {
                         FileWriter fWriter = new FileWriter(passFiles);
                         fWriter.write(writeMe);
+                        fWriter.write("\nNetflix.com,nathang0515@gmail.com,TqcBej4FWeZBCXY2VJp/xw==");
                         fWriter.close();
                     } catch (IOException e) {
                         e.printStackTrace();
