@@ -6,8 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,7 +27,7 @@ import java.util.List;
  * Use the {@link Home#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Home extends Fragment implements RecyclerViewInterface {
+public class Home extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -91,7 +89,7 @@ public class Home extends Fragment implements RecyclerViewInterface {
         recyclerview = view.findViewById(R.id.recyclerView);
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerview.setHasFixedSize(true);
-        MyAdapter adapter = new MyAdapter(getContext(), websiteArrayList, this);
+        MyAdapter adapter = new MyAdapter(getContext(), websiteArrayList);
         recyclerview.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
