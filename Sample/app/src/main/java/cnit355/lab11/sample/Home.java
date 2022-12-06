@@ -87,6 +87,7 @@ public class Home extends Fragment {
 
     private void dataInitialize() {
 
+
         websiteArrayList = new ArrayList<Websites>();
         headings = new String[]{
                 "Website 1",
