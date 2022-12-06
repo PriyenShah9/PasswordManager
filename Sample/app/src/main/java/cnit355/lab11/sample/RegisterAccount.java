@@ -27,6 +27,7 @@ public class RegisterAccount extends AppCompatActivity {
     TextView Username;
     TextView Password;
     Button reg;
+    Button back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +36,14 @@ public class RegisterAccount extends AppCompatActivity {
         Username = findViewById(R.id.email);
         Password = findViewById(R.id.pass);
         reg = findViewById(R.id.addAnother);
+        back = findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mIntent = new Intent(getApplicationContext(), LoginPage.class);
+                startActivity(mIntent);
+            }
+        });
         reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,30 +54,47 @@ public class RegisterAccount extends AppCompatActivity {
                 {
                     File root = new File(Environment.getExternalStorageDirectory(), "/Documents");
                     File passFiles = new File(root, user + ".txt");
-                    passFiles.getParentFile().mkdirs();
-                    if(!passFiles.exists())
+                    File usr = new File(Environment.getExternalStorageDirectory(), "/Documents");
+                    String[] userList = usr.list();
+                    String theUser = "";
+                    for(String file : userList)
                     {
+                        if(file.equals(user + ".txt"))
+                        {
+                            theUser=file;
+                        }
+                    }
+                    if(theUser != "")
+                    {
+                        Toast.makeText(getApplicationContext(), "This account already exists! Please try again!", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        passFiles.getParentFile().mkdirs();
+                        if(!passFiles.exists())
+                        {
+                            try {
+                                passFiles.createNewFile();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        final String secretKey = "355Project";
+                        AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
+                        String encryptedPass = aesEncryptionDecryption.encrypt(pass, secretKey);
+                        String writeMe = name+","+user+","+encryptedPass;
                         try {
-                            passFiles.createNewFile();
+                            FileWriter fWriter = new FileWriter(passFiles);
+                            fWriter.write(writeMe);
+                            fWriter.close();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        Intent mTent = new Intent(getApplicationContext(), LoginPage.class);
+                        startActivity(mTent);
+                        //new DatabaseRequest().execute(name, user, pass);
                     }
-                    final String secretKey = "355Project";
-                    AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
-                    String encryptedPass = aesEncryptionDecryption.encrypt(pass, secretKey);
-                    String writeMe = name+","+user+","+encryptedPass;
-                    try {
-                        FileWriter fWriter = new FileWriter(passFiles);
-                        fWriter.write(writeMe);
-                        fWriter.write("\nNetflix.com,nathang0515@gmail.com,TqcBej4FWeZBCXY2VJp/xw==");
-                        fWriter.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Intent mTent = new Intent(getApplicationContext(), LoginPage.class);
-                    startActivity(mTent);
-                    //new DatabaseRequest().execute(name, user, pass);
                 }
                 else
                 {
