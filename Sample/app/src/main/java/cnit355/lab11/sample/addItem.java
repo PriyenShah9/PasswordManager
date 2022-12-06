@@ -36,6 +36,7 @@ public class addItem extends AppCompatActivity {
                 List<String> lines = new ArrayList<String>();
                 Intent mIntent = getIntent();
                 String user = mIntent.getStringExtra("user");
+                String name = mIntent.getStringExtra("name");
                 String website = websiteText.getText().toString();
                 String email = emailText.getText().toString();
                 String pass = passText.getText().toString();
@@ -87,6 +88,7 @@ public class addItem extends AppCompatActivity {
                     }
                     Toast.makeText(getApplicationContext(), "Your " + website + " account has been added!", Toast.LENGTH_SHORT).show();
                     Intent mntent = new Intent(getApplicationContext(), MainActivity.class);
+                    mntent.putExtra("name", name);
                     mntent.putExtra("user", user);
                     startActivity(mntent);
                 }

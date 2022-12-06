@@ -24,6 +24,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewInterface {
     public static String user = "";
+    public static String name = "";
     private RecyclerView recyclerview;
     private List<String> sites = new ArrayList<String>();
     private List<String> email = new ArrayList<String>();
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent login = getIntent();
-        String name = login.getStringExtra("name");
+        name = login.getStringExtra("name");
         user = login.getStringExtra("user");
         setTitle("Hello " + name + "!");
 
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             public void onClick(View v) {
                 Intent mIntent = new Intent(MainActivity.this, addItem.class);
                 mIntent.putExtra("user", tempusr);
+                mIntent.putExtra("name", name);
                 startActivity(mIntent);
             }
         });
@@ -105,11 +107,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     @Override
     public void onItemClick(int position) {
-        Intent mIntent2 = new Intent(MainActivity.this, DetailActivity.class);
-
-        mIntent2.putExtra("Email", String.valueOf(websiteArrayList.get(position).Email));
-        mIntent2.putExtra("Password", String.valueOf(websiteArrayList.get(position).Password));
-        startActivity(mIntent2);
+        Intent mIntent = new Intent(MainActivity.this, DetailActivity.class);
+        mIntent.putExtra("user", user);
+        mIntent.putExtra("website", websiteArrayList.get(position).Name);
+        mIntent.putExtra("email", String.valueOf(websiteArrayList.get(position).Email));
+        mIntent.putExtra("password", String.valueOf(websiteArrayList.get(position).Password));
+        mIntent.putExtra("name", name);
+        startActivity(mIntent);
 
     }
 
