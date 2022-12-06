@@ -87,6 +87,7 @@ public class addItem extends AppCompatActivity {
                     }
                     Toast.makeText(getApplicationContext(), "Your " + website + " account has been added!", Toast.LENGTH_SHORT).show();
                     Intent mntent = new Intent(getApplicationContext(), MainActivity.class);
+                    mntent.putExtra("user", user);
                     startActivity(mntent);
                 }
                 else
