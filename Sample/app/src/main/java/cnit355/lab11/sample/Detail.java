@@ -4,9 +4,23 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +67,73 @@ public class Detail extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        Button remove = getView().findViewById(R.id.del);
+        TextView email = getView().findViewById(R.id.email);
+        EditText password = getView().findViewById(R.id.WebPassword);
+        CheckBox pas = getView().findViewById(R.id.checkBox);
+        pas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(pas.isChecked())
+                {
+                    password.setTransformationMethod(null);
+                }
+                if(!pas.isChecked())
+                {
+                    password.setTransformationMethod(new PasswordTransformationMethod());
+                }
+            }
+        });
+        String website = "Netflix.com"; //REPLACE WITH VARIABLE
+        String emailText = "nathang0515@gmail.com"; // REPLACE WITH VARIABLE
+        String passwordText = "Newt1356"; //REPLACE WITH VARIABLE
+        email.setText(emailText);
+        password.setText(passwordText);
+        password.setTransformationMethod(new PasswordTransformationMethod());
+        AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
+        String encrypted = aesEncryptionDecryption.encrypt(passwordText, "355Project");
+        remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> editing = new ArrayList<String>();
+                String removeMe = website+","+emailText+","+encrypted;
+                File root = new File(Environment.getExternalStorageDirectory(), "/Documents");
+                File passFiles = new File(root, MainActivity.user);
+                try(BufferedReader br = new BufferedReader(new FileReader(passFiles)))
+                {
+                    String line;
+                    int count = 0;
+                    while((line = br.readLine()) != null)
+                    {
+                        if(count >0)
+                        {
+                            editing.add("\n"+line);
+                        }
+                        else
+                        {
+                            editing.add(line);
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try
+                {
+                    FileWriter fWriter = new FileWriter(passFiles);
+                    for (String s : editing)
+                    {
+                        if(!s.equals(removeMe))
+                        {
+                            fWriter.write(s);
+                        }
+                    }
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
