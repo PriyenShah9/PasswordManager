@@ -8,11 +8,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,7 +38,9 @@ public class Home extends Fragment {
     private ArrayList<Websites> websiteArrayList;
     private String[] headings;
     private RecyclerView recyclerview;
-
+    private List<String> sites = new ArrayList<String>();
+    private List<String> email = new ArrayList<String>();
+    private List<String> password = new ArrayList<String>();
     public Home() {
         // Required empty public constructor
     }
@@ -86,8 +94,33 @@ public class Home extends Fragment {
     }
 
     private void dataInitialize() {
+        File usr = new File(Environment.getExternalStorageDirectory(), "/Documents");
+        String tempusr = MainActivity.user+".txt";
+        File curUSR = new File(usr, tempusr);
+        try(BufferedReader br = new BufferedReader(new FileReader(curUSR))) {
+            String line;
+            int count = 0;
+            while ((line = br.readLine()) != null)
+            {
+                if(count == 0)
+                {
 
-
+                }
+                else
+                {
+                    AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
+                    final String secretKey = "355Project";
+                    String[] split = line.split(",");
+                    String pass = aesEncryptionDecryption.decrypt(split[2], secretKey);
+                    sites.add(split[0]);
+                    email.add(split[1]);
+                    password.add(pass);
+                }
+                count+=1;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         websiteArrayList = new ArrayList<Websites>();
         headings = new String[]{
                 "Website 1",
