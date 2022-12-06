@@ -48,6 +48,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -161,23 +162,30 @@ public class PwnedService extends Service {
             }
         } ;
     }
-    private void createNotification () {
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService( NOTIFICATION_SERVICE ) ;
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext() , default_notification_channel_id ) ;
-        mBuilder.setContentTitle( "My Notification" ) ;
-        mBuilder.setContentText( "Notification Listener Service Example" ) ;
-        mBuilder.setTicker( "Notification Listener Service Example" ) ;
-        mBuilder.setSmallIcon(R.drawable. ic_launcher_foreground ) ;
-        mBuilder.setAutoCancel( true ) ;
-        if (android.os.Build.VERSION. SDK_INT >= android.os.Build.VERSION_CODES. O ) {
-            int importance = NotificationManager. IMPORTANCE_HIGH ;
-            NotificationChannel notificationChannel = new NotificationChannel( NOTIFICATION_CHANNEL_ID , "NOTIFICATION_CHANNEL_NAME" , importance) ;
-            mBuilder.setChannelId( NOTIFICATION_CHANNEL_ID ) ;
+    private void createNotification (int leaks) {
+        if(leaks > 0)
+        {
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService( NOTIFICATION_SERVICE ) ;
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext() , default_notification_channel_id ) ;
+            mBuilder.setContentTitle( "KeepIT Password" ) ;
+            mBuilder.setContentText( "Warning! One of your passwords have been leaked by " + Integer.toString(leaks) + " websites!") ;
+            mBuilder.setTicker( "Notification Listener Service Example" ) ;
+            mBuilder.setSmallIcon(R.drawable. ic_launcher_foreground ) ;
+            mBuilder.setAutoCancel( true ) ;
+            if (android.os.Build.VERSION. SDK_INT >= android.os.Build.VERSION_CODES. O ) {
+                int importance = NotificationManager. IMPORTANCE_HIGH ;
+                NotificationChannel notificationChannel = new NotificationChannel( NOTIFICATION_CHANNEL_ID , "NOTIFICATION_CHANNEL_NAME" , importance) ;
+                mBuilder.setChannelId( NOTIFICATION_CHANNEL_ID ) ;
+                assert mNotificationManager != null;
+                mNotificationManager.createNotificationChannel(notificationChannel) ;
+            }
             assert mNotificationManager != null;
-            mNotificationManager.createNotificationChannel(notificationChannel) ;
+            mNotificationManager.notify(( int ) System. currentTimeMillis () , mBuilder.build()) ;
         }
-        assert mNotificationManager != null;
-        mNotificationManager.notify(( int ) System. currentTimeMillis () , mBuilder.build()) ;
+        else
+        {
+            System.out.println("Nice! You have a good password!");
+        }
     }
     ProgressDialog progressDialog;
     List<String> passes = new ArrayList<>();
@@ -195,17 +203,23 @@ public class PwnedService extends Service {
                 int count = 0;
                 for (String s : parsing)
                 {
-                    if(count == 2)
-                    {
-                        leaks = Integer.parseInt(s);
-                    }
+                    String lines[] = s.split("\\r?\\n");
                     if(count == 1)
                     {
-                        count+=1;
+                        leaks = Integer.parseInt(lines[0]);
+                        count = 0;
+                        break;
                     }
-                    if(s.equals(passHash))
+                    try
                     {
-                        count+=1;
+                        if(lines[1].toLowerCase().equals(passHash))
+                        {
+                            count+=1;
+                        }
+                    }
+                    catch (IndexOutOfBoundsException e)
+                    {
+                        e.printStackTrace();
                     }
                 }
                 Log.i("WORK", EntityUtils.toString(mEntity, "UTF-8"));
@@ -241,8 +255,10 @@ public class PwnedService extends Service {
             url = "https://api.pwnedpasswords.com/range/" + firstFive;
             HttpClient httpClient = HttpClients.createDefault();
             HttpGet httpGet = new HttpGet(url);
-            getServetReponse(sha1, httpClient, httpGet);
+            String without5 = sha1.substring(5, sha1.length());
+            getServetReponse(without5, httpClient, httpGet);
             running = false;
+            createNotification(leaks);
             BaseHttpConn baseHttpConn = new BaseHttpConn(new TimeOut() {
                 @Override
                 public void ShuaXin() {
