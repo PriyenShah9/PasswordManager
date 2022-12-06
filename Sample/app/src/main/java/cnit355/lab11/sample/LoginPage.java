@@ -5,22 +5,29 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginPage extends AppCompatActivity {
     TextView Username;
     TextView Password;
     Button log;
     Button reg;
+    public List<String> users = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,31 +46,46 @@ public class LoginPage extends AppCompatActivity {
         log.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String user = Username.getText().toString();
+                String user = Username.getText().toString()+".txt";
                 String pass = Password.getText().toString();
+
                 if(user.length()>0 && pass.length()>0)
                 {
+                    File usr = new File(Environment.getExternalStorageDirectory(), "/Documents");
+                    String[] userList = usr.list();
+                    String theUser = "";
+                    for(String file : userList)
+                    {
+                        if(file.equals(user))
+                        {
+                            theUser=user;
+                        }
+                    }
                     //new DatabaseRequest().execute(user, pass);
-                    if(user.equals("NDawg") && pass.equals("Newt1356"))
+                    if(theUser != "")
                     {
-                        Toast.makeText(getApplicationContext(), "Login Success! Redirecting...", Toast.LENGTH_SHORT).show();
-                        Intent main = new Intent(getApplicationContext(), MainActivity.class);
-                        main.putExtra("user", user);
-                        startActivity(main);
-                    }
-                    else if(user.equals("Priyen") && pass.equals("Password1"))
-                    {
-                        Toast.makeText(getApplicationContext(), "Login Success! Redirecting...", Toast.LENGTH_SHORT).show();
-                        Intent main = new Intent(getApplicationContext(), MainActivity.class);
-                        main.putExtra("user", user);
-                        startActivity(main);
-                    }
-                    else if(user.equals("Charushi") && pass.equals("Password1"))
-                    {
-                        Toast.makeText(getApplicationContext(), "Login Success! Redirecting...", Toast.LENGTH_SHORT).show();
-                        Intent main = new Intent(getApplicationContext(), MainActivity.class);
-                        main.putExtra("user", user);
-                        startActivity(main);
+                        File curUSR = new File(usr, theUser);
+                        try(BufferedReader br = new BufferedReader(new FileReader(curUSR))){
+                            String line;
+                            while((line = br.readLine()) != null)
+                            {
+                                final String secretKey = "355Project";
+                                String[] split = line.split(",");
+                                String tempPass = split[2];
+                                AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
+                                String decryptedPass = aesEncryptionDecryption.decrypt(tempPass, secretKey);
+                                if(pass.equals(decryptedPass))
+                                {
+                                    Toast.makeText(getApplicationContext(), "You have logged in!", Toast.LENGTH_SHORT).show();
+                                    Intent main = new Intent(LoginPage.this, MainActivity.class);
+                                    main.putExtra("user",theUser);
+                                    main.putExtra("name", split[0]);
+                                    startActivity(main);
+                                }
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                     else
                     {
@@ -77,8 +99,14 @@ public class LoginPage extends AppCompatActivity {
             }
         });
     }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //startService(new Intent(this, PwnedService.class));
+    }
 }
-class DatabaseRequest extends AsyncTask<String, String, String> {
+
+/*class DatabaseRequest extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... strings) {
@@ -109,4 +137,4 @@ class DatabaseRequest extends AsyncTask<String, String, String> {
 
         return res;
     }
-}
+}*/
