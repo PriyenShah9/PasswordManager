@@ -93,6 +93,10 @@ public class LoginPage extends AppCompatActivity {
                                         main.putExtra("name", split[0]);
                                         startActivity(main);
                                     }
+                                    else
+                                    {
+                                        Toast.makeText(getApplicationContext(), "Incorrect username or password!", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                                 count+=1;
                             }
