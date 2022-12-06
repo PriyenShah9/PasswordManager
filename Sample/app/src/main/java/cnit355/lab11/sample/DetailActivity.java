@@ -56,7 +56,8 @@ public class DetailActivity extends AppCompatActivity {
         change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(password.getText().equals(passwordText))
+                String test = password.getText().toString();
+                if(test.equals(passwordText))
                 {
                     Toast.makeText(getApplicationContext(), "Please choose a different password...", Toast.LENGTH_SHORT).show();
                 }
@@ -162,13 +163,13 @@ public class DetailActivity extends AppCompatActivity {
                     int count = 0;
                     for (String s : editing)
                     {
-                        if(!s.equals(removeMe))
-                        {
-                            fWriter.write("\n"+s);
-                        }
                         if(count == 0)
                         {
                             fWriter.write(s);
+                        }
+                        else if(!s.equals(removeMe))
+                        {
+                            fWriter.write("\n"+s);
                         }
                         count+=1;
                     }
