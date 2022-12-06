@@ -3,7 +3,6 @@ package cnit355.lab11.sample;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -14,11 +13,8 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +28,10 @@ public class LoginPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
-        Username = findViewById(R.id.Username);
+        Username = findViewById(R.id.email);
         Password = findViewById(R.id.pass);
         log = findViewById(R.id.log);
-        reg = findViewById(R.id.reg);
+        reg = findViewById(R.id.addAnother);
         reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,21 +63,38 @@ public class LoginPage extends AppCompatActivity {
                         File curUSR = new File(usr, theUser);
                         try(BufferedReader br = new BufferedReader(new FileReader(curUSR))){
                             String line;
+                            int count = 0;
                             while((line = br.readLine()) != null)
                             {
-                                final String secretKey = "355Project";
-                                String[] split = line.split(",");
-                                String tempPass = split[2];
-                                AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
-                                String decryptedPass = aesEncryptionDecryption.decrypt(tempPass, secretKey);
-                                if(pass.equals(decryptedPass))
-                                {
-                                    Toast.makeText(getApplicationContext(), "You have logged in!", Toast.LENGTH_SHORT).show();
-                                    Intent main = new Intent(LoginPage.this, MainActivity.class);
-                                    main.putExtra("user",theUser);
-                                    main.putExtra("name", split[0]);
-                                    startActivity(main);
+                                if(count == 0) {
+                                    final String secretKey = "355Project";
+                                    String[] split = line.split(",");
+                                    String tempPass = split[2];
+                                    AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
+                                    String decryptedPass = aesEncryptionDecryption.decrypt(tempPass, secretKey);
+                                    if (pass.equals(decryptedPass)) {
+                                        File root = new File(Environment.getExternalStorageDirectory(), "/Documents");
+                                        File passFiles = new File(root, "latestLog.txt");
+                                        passFiles.getParentFile().mkdirs();
+                                        if (!passFiles.exists()) {
+                                            try {
+                                                passFiles.createNewFile();
+
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                        FileWriter fWriter = new FileWriter(passFiles);
+                                        fWriter.write(theUser);
+                                        fWriter.close();
+                                        Toast.makeText(getApplicationContext(), "You have logged in!", Toast.LENGTH_SHORT).show();
+                                        Intent main = new Intent(LoginPage.this, MainActivity.class);
+                                        main.putExtra("user", theUser);
+                                        main.putExtra("name", split[0]);
+                                        startActivity(main);
+                                    }
                                 }
+                                count+=1;
                             }
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -102,7 +115,7 @@ public class LoginPage extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        //startService(new Intent(this, PwnedService.class));
+        startService(new Intent(this, PwnedService.class));
     }
 }
 

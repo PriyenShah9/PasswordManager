@@ -8,8 +8,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/list_items"/>
+        android:layout_height="656dp"
+        android:layout_gravity="bottom"
+        tools:listitem="@layout/list_items" />
 
     <Button
         android:id="@+id/AddNew"
@@ -18,5 +19,6 @@
         android:backgroundTint="#1976D2"
         android:layout_marginTop="10dp"
         android:gravity="right|top"
+        android:onClick="addNew"
         android:text="Add New Password" />
 </FrameLayout>
