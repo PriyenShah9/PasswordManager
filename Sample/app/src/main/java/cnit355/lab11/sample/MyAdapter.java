@@ -55,6 +55,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 @Override
                 public void onClick(View view) {
 
+
+
                 }
             });
         }

@@ -122,6 +122,7 @@ public class Home extends Fragment {
             e.printStackTrace();
         }
         websiteArrayList = new ArrayList<Websites>();
+        /*
         headings = new String[]{
                 "Website 1",
                 "Website 2",
@@ -133,8 +134,10 @@ public class Home extends Fragment {
 
         };
 
-        for (int i  = 0; i <headings.length; i++){
-            Websites web = new Websites(headings[i]);
+         */
+
+        for (int i  = 0; i <sites.size(); i++){
+            Websites web = new Websites(sites.get(i), email.get(i), password.get(i));
             websiteArrayList.add(web);
         }
     }
