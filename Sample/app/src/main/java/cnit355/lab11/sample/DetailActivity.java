@@ -1,15 +1,20 @@
 package cnit355.lab11.sample;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,20 +25,32 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class DetailActivity extends AppCompatActivity {
     EditText WebEmail, WebPassword;
-    Button backButton;
+    ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        Button remove = findViewById(R.id.del);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setIcon(R.drawable.keepitlogo);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        if (Build.VERSION.SDK_INT >= 21) {
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(this.getResources().getColor(R.color.KeepItColor));
+        }
+        ImageButton genPass = findViewById(R.id.genPass);
+        ImageButton remove = findViewById(R.id.del);
         EditText email = findViewById(R.id.WebEmail);
         EditText password = findViewById(R.id.WebPassword);
         CheckBox pas = findViewById(R.id.checkBox);
-        Button change = findViewById(R.id.change);
+        ImageButton change = findViewById(R.id.change);
         pas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,6 +62,26 @@ public class DetailActivity extends AppCompatActivity {
                 {
                     password.setTransformationMethod(new PasswordTransformationMethod());
                 }
+            }
+        });
+        genPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Random rand = new Random();
+                char[] password = new char[15];
+                String capitalLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                String lowerLetters = "abcdefghijklmnopqrstuvwxyz";
+                String numbers = "1234567890";
+                String special = "!@#$%^&*_-;:!@#$%^&*_-;:";
+                String all = lowerLetters + capitalLetters + numbers + special;
+                int random = rand.nextInt(special.length() - 1);
+                for (int i = 0; i < password.length; i++) {
+                    password[i] = all.charAt(rand.nextInt(all.length()));
+                }
+
+                String pass = String.valueOf(password);
+                TextView pswd = findViewById(R.id.WebPassword);
+                pswd.setText(pass);
             }
         });
         Intent mIntent = getIntent();
@@ -129,7 +166,7 @@ public class DetailActivity extends AppCompatActivity {
         email.setText(emailText);
         password.setText(passwordText);
         password.setTransformationMethod(new PasswordTransformationMethod());
-        backButton = (Button) findViewById(R.id.buttonBack);
+        backButton = findViewById(R.id.buttonBack);
         AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
         String encrypted = aesEncryptionDecryption.encrypt(passwordText, "355Project");
         remove.setOnClickListener(new View.OnClickListener() {

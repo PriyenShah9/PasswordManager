@@ -1,12 +1,19 @@
 package cnit355.lab11.sample;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,13 +28,23 @@ import java.util.List;
 public class LoginPage extends AppCompatActivity {
     TextView Username;
     TextView Password;
-    Button log;
-    Button reg;
+    ImageButton log;
+    ImageButton reg;
     public List<String> users = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setIcon(R.drawable.keepitlogo);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        if (Build.VERSION.SDK_INT >= 21) {
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(this.getResources().getColor(R.color.KeepItColor));
+        }
         Username = findViewById(R.id.email);
         Password = findViewById(R.id.pass);
         log = findViewById(R.id.log);
@@ -119,7 +136,7 @@ public class LoginPage extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        //startService(new Intent(this, PwnedService.class));
+        startService(new Intent(this, PwnedService.class));
     }
 }
 

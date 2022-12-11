@@ -13,28 +13,24 @@
         android:backgroundTint="#000000"
         tools:context=".Home">
 
+        <ImageButton
+            android:id="@+id/AddNew"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/addnewaccount" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:background="#00000000"
-            tools:listitem="@layout/list_items" />
+            tools:listitem="@layout/list_items">
 
-        <Button
-            android:id="@+id/AddNew"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:backgroundTint="#1976D2"
-            android:shadowRadius=".2"
-            android:shadowDx="0"
-            android:shadowDy="-1"
-            android:shadowColor="@color/black"
-            android:fadingEdge="vertical"
-            android:gravity="right|top"
+        </androidx.recyclerview.widget.RecyclerView>
 
-            android:text="Add New Password" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

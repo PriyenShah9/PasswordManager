@@ -1,12 +1,18 @@
 package cnit355.lab11.sample;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,10 +32,34 @@ public class addItem extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setIcon(R.drawable.keepitlogo);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        if (Build.VERSION.SDK_INT >= 21) {
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(this.getResources().getColor(R.color.KeepItColor));
+        }
         websiteText = findViewById(R.id.website);
         emailText = findViewById(R.id.email);
         passText = findViewById(R.id.pass);
-        Button add = findViewById(R.id.addAnother);
+        ImageButton back = findViewById(R.id.backBUTT);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent mIntent = getIntent();
+                String user = mIntent.getStringExtra("user");
+                String name = mIntent.getStringExtra("name");
+                Intent mntent = new Intent(getApplicationContext(), MainActivity.class);
+                mntent.putExtra("name", name);
+                mntent.putExtra("user", user);
+                startActivity(mntent);
+            }
+        });
+        ImageButton add = findViewById(R.id.addAnother);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

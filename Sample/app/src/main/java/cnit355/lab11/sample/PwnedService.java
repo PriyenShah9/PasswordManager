@@ -170,7 +170,7 @@ public class PwnedService extends Service {
             mBuilder.setContentTitle( "KeepIT Password" ) ;
             mBuilder.setContentText( "Warning! One of your passwords have been leaked by " + Integer.toString(leaks) + " websites!") ;
             mBuilder.setTicker( "Notification Listener Service Example" ) ;
-            mBuilder.setSmallIcon(R.drawable. ic_launcher_foreground ) ;
+            mBuilder.setSmallIcon(R.drawable.keepiticon) ;
             mBuilder.setAutoCancel( true ) ;
             if (android.os.Build.VERSION. SDK_INT >= android.os.Build.VERSION_CODES. O ) {
                 int importance = NotificationManager. IMPORTANCE_HIGH ;

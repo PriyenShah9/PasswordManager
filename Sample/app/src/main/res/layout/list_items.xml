@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="16dp"
-        android:backgroundTint="#7EB0E1"
+        android:backgroundTint="#b35a5a"
         android:textAlignment="center"
         app:cardCornerRadius="100dp"
         app:cardElevation="100dp"
@@ -24,7 +24,6 @@
             android:layout_marginTop="10dp"
             android:backgroundTint="#689F38"
             android:shadowRadius="100"
-
             android:text="TextView"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
