@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +31,7 @@ import java.util.Random;
 public class DetailActivity extends AppCompatActivity {
     EditText WebEmail, WebPassword;
     ImageButton backButton;
-
+    public static int pos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +52,25 @@ public class DetailActivity extends AppCompatActivity {
         EditText password = findViewById(R.id.WebPassword);
         CheckBox pas = findViewById(R.id.checkBox);
         ImageButton change = findViewById(R.id.change);
+        SeekBar passLength = findViewById(R.id.seekBar);
+        passLength.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                TextView passLen = findViewById(R.id.passwordLength);
+                pos = progress;
+                passLen.setText("Password Length: " + progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         pas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,18 +88,34 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Random rand = new Random();
-                char[] password = new char[15];
-                String capitalLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                String lowerLetters = "abcdefghijklmnopqrstuvwxyz";
-                String numbers = "1234567890";
-                String special = "!@#$%^&*_-;:!@#$%^&*_-;:";
-                String all = lowerLetters + capitalLetters + numbers + special;
-                int random = rand.nextInt(special.length() - 1);
-                for (int i = 0; i < password.length; i++) {
-                    password[i] = all.charAt(rand.nextInt(all.length()));
+                char[] specialPass = new char[0];
+                if(pos != 0)
+                {
+                    specialPass = new char[pos];
+                    String capitalLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                    String lowerLetters = "abcdefghijklmnopqrstuvwxyz";
+                    String numbers = "1234567890";
+                    String special = "!@#$%^&*_-;:!@#$%^&*_-;:";
+                    String all = lowerLetters + capitalLetters + numbers + special;
+                    int random = rand.nextInt(special.length() - 1);
+                    for (int i = 0; i < specialPass.length; i++) {
+                        specialPass[i] = all.charAt(rand.nextInt(all.length()));
+                    }
                 }
-
-                String pass = String.valueOf(password);
+                if(pos == 0)
+                {
+                    specialPass = new char[15];
+                    String capitalLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                    String lowerLetters = "abcdefghijklmnopqrstuvwxyz";
+                    String numbers = "1234567890";
+                    String special = "!@#$%^&*_-;:!@#$%^&*_-;:";
+                    String all = lowerLetters + capitalLetters + numbers + special;
+                    int random = rand.nextInt(special.length() - 1);
+                    for (int i = 0; i < specialPass.length; i++) {
+                        specialPass[i] = all.charAt(rand.nextInt(all.length()));
+                    }
+                }
+                String pass = String.valueOf(specialPass);
                 TextView pswd = findViewById(R.id.WebPassword);
                 pswd.setText(pass);
             }
